@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Free build disk space
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
       - uses: actions/setup-python@v5
@@ -60,8 +60,8 @@ jobs:
           python3 test/registered/unit/configs/test_model_config.py
       - name: Regression against original model configuration
         run: |
-          git show HEAD~1:python/sglang/srt/configs/model_config.py > /tmp/modified-model-config.py
-          git show HEAD~2:python/sglang/srt/configs/model_config.py > python/sglang/srt/configs/model_config.py
+          cp python/sglang/srt/configs/model_config.py /tmp/modified-model-config.py
+          git show 542a7325f0933b5b9d2ebad5ad23f580db63cb83:python/sglang/srt/configs/model_config.py > python/sglang/srt/configs/model_config.py
           if python3 test/registered/unit/configs/test_model_config_shapes.py TestModelConfigShapes.test_external_model_opts_into_mla; then
             echo 'Regression unexpectedly passed on the original implementation'
             exit 1
